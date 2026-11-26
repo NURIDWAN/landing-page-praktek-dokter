@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Widgets\PracticeOverviewStats;
 use App\Filament\Widgets\RecentContactMessagesWidget;
 use App\Filament\Widgets\UpcomingScheduleAndDraftsWidget;
+use App\Services\PracticeDataService;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -34,6 +35,13 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Praktek Dokter Siti Mudiroh')
+            ->favicon(function (): string {
+                try {
+                    return app(PracticeDataService::class)->settings()->favicon;
+                } catch (\Throwable) {
+                    return '/favicon.ico';
+                }
+            })
             ->maxContentWidth(Width::Full)
             ->colors([
                 'primary' => Color::hex('#176b55'),

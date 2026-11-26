@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Announcement;
 use App\Models\Article;
 use App\Models\ArticleCategory;
+use App\Models\Page;
 use App\Models\Service;
 use App\Models\SpecialClosure;
 use App\Services\PracticeDataService;
@@ -174,5 +175,57 @@ class PublicPagesTest extends TestCase
         $this->get('/artikel?q=Hipertensi')
             ->assertOk()
             ->assertSee('Mengenal Tekanan Darah Tinggi');
+    }
+
+    public function test_dynamic_static_pages_are_accessible_via_halaman_and_root_slug(): void
+    {
+        Page::create([
+            'title' => 'Panduan Pasien Baru',
+            'slug' => '/Panduan Pasien Baru/',
+            'body' => '<p>Informasi pendaftaran pasien baru.</p>',
+            'is_published' => true,
+        ]);
+
+        Page::create([
+            'title' => 'Halaman Draft',
+            'slug' => 'halaman-draft',
+            'body' => '<p>Belum terbit.</p>',
+            'is_published' => false,
+        ]);
+
+        $this->get('/halaman/panduan-pasien-baru')
+            ->assertOk()
+            ->assertSee('Panduan Pasien Baru')
+            ->assertSee('Informasi pendaftaran pasien baru.');
+
+        $this->get('/panduan-pasien-baru')
+            ->assertOk()
+            ->assertSee('Panduan Pasien Baru');
+
+        $this->get('/halaman/halaman-draft')->assertNotFound();
+        $this->get('/halaman-draft')->assertNotFound();
+
+        $this->get('/halaman-tidak-ditemukan')
+            ->assertNotFound()
+            ->assertSee('Halaman Tidak Ditemukan');
+    }
+
+    public function test_logo_hides_when_empty_and_shows_when_configured_with_custom_favicon(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('Logo Praktek Dokter Siti Mudiroh')
+            ->assertSee('href="/favicon.ico"', false);
+
+        $settings = app(PracticeSettings::class);
+        $settings->logo = 'settings/custom-logo.png';
+        $settings->favicon = 'settings/custom-favicon.png';
+        $settings->save();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('src="/storage/settings/custom-logo.png"', false)
+            ->assertSee('alt="Logo Praktek Dokter Siti Mudiroh"', false)
+            ->assertSee('href="/storage/settings/custom-favicon.png"', false);
     }
 }

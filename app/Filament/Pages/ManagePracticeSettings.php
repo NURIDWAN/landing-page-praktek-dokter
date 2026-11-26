@@ -59,12 +59,21 @@ class ManagePracticeSettings extends SettingsPage
                                             ->label('Logo Praktek (Opsional)')
                                             ->disk('public')
                                             ->directory('settings')
-                                            ->image(),
+                                            ->image()
+                                            ->helperText('Jika kosong, logo disembunyikan dan hanya nama praktek yang tampil.'),
+                                        FileUpload::make('favicon')
+                                            ->label('Favicon Website (Opsional)')
+                                            ->disk('public')
+                                            ->directory('settings')
+                                            ->acceptedFileTypes(['image/x-icon', 'image/vnd.microsoft.icon', 'image/png', 'image/svg+xml', 'image/webp', 'image/jpeg'])
+                                            ->maxSize(1024)
+                                            ->helperText('Ikon tab browser (32x32 / 64x64 px, format ICO, PNG, SVG, atau WEBP).'),
                                         FileUpload::make('hero_image')
                                             ->label('Foto Hero Praktek (Opsional)')
                                             ->disk('public')
                                             ->directory('settings')
-                                            ->image(),
+                                            ->image()
+                                            ->columnSpanFull(),
                                     ]),
                                 Section::make('Konten Hero Beranda')
                                     ->columns(2)

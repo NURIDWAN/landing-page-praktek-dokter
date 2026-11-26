@@ -57,6 +57,7 @@ class PracticeDataService
                 'hero_secondary_cta' => $s->hero_secondary_cta,
                 'hero_image' => $this->resolveImage($s->hero_image, '/images/clinic-hero.webp'),
                 'logo' => $s->logo ? $this->resolveImage($s->logo, '') : null,
+                'favicon' => $this->resolveImage($s->favicon, '/favicon.ico'),
                 'doctor_name' => $s->doctor_name,
                 'doctor_role' => $s->doctor_role,
                 'doctor_bio' => $s->doctor_bio,

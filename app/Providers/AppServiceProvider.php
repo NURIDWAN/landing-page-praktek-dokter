@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer([
             'layouts.app',
             'pages.*',
+            'errors.*',
             'components.seo-head',
             'components.medical-disclaimer',
         ], PublicLayoutComposer::class);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\PracticeDataService;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -22,9 +23,24 @@ class PageController extends Controller
         return $this->renderSlug($slug, $practiceData);
     }
 
+    public function fallback(Request $request, PracticeDataService $practiceData): View
+    {
+        if (! $request->isMethod('GET') && ! $request->isMethod('HEAD')) {
+            abort(404);
+        }
+
+        $path = trim($request->path(), '/');
+
+        if ($path === '' || str_contains($path, '/') || str_contains($path, '.')) {
+            abort(404);
+        }
+
+        return $this->renderSlug($path, $practiceData);
+    }
+
     private function renderSlug(string $slug, PracticeDataService $practiceData): View
     {
-        $page = $practiceData->findPublishedPage($slug);
+        $page = $practiceData->findPublishedPage(trim($slug, '/'));
         abort_if(! $page, 404);
 
         return view('pages.static', [

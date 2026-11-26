@@ -24,6 +24,8 @@ class PracticeSettings extends Settings
 
     public ?string $logo;
 
+    public ?string $favicon;
+
     public string $doctor_name;
 
     public string $doctor_role;

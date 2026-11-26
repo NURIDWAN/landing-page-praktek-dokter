@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#176b55">
+    <link rel="icon" href="{{ $siteSettings->favicon ?? '/favicon.ico' }}">
+    <link rel="apple-touch-icon" href="{{ $siteSettings->favicon ?? '/favicon.ico' }}">
 
     @yield('seo')
 
@@ -59,6 +61,13 @@
     >
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
             <a href="{{ route('home') }}" class="group flex items-center gap-3">
+                @if(! empty($siteSettings->logo))
+                    <img
+                        src="{{ $siteSettings->logo }}"
+                        alt="Logo {{ $siteSettings->practice_name }}"
+                        class="h-10 w-auto max-w-[140px] shrink-0 rounded-xl object-contain"
+                    >
+                @endif
                 <div class="leading-tight">
                     <span class="font-display block text-base font-semibold text-[#13221d] sm:text-lg">
                         {{ $siteSettings->practice_name }}
@@ -145,11 +154,13 @@
             <div class="grid gap-10 md:grid-cols-12">
                 <div class="md:col-span-5">
                     <div class="flex items-center gap-3">
-                        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/12 text-white">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M12 5v14M5 12h14"/>
-                            </svg>
-                        </span>
+                        @if(! empty($siteSettings->logo))
+                            <img
+                                src="{{ $siteSettings->logo }}"
+                                alt="Logo {{ $siteSettings->practice_name }}"
+                                class="h-10 w-auto max-w-[140px] shrink-0 rounded-xl bg-white/95 p-1 object-contain"
+                            >
+                        @endif
                         <div>
                             <p class="font-display text-lg font-semibold text-white">{{ $siteSettings->practice_name }}</p>
                             <p class="text-xs text-emerald-100/80">{{ $siteSettings->doctor_name }} · {{ $siteSettings->doctor_role }}</p>

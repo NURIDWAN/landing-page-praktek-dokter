@@ -26,3 +26,5 @@ Route::get('/syarat-ketentuan', [PageController::class, 'terms'])->name('pages.t
 Route::get('/halaman/{slug}', [PageController::class, 'show'])->name('pages.show');
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+
+Route::fallback([PageController::class, 'fallback']);

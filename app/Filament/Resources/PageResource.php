@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\Page;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
@@ -53,11 +54,17 @@ class PageResource extends Resource
                             ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state ?? ''))),
                         TextInput::make('slug')
                             ->label('Slug URL')
+                            ->prefix(url('/halaman').'/')
+                            ->helperText('Dapat diakses melalui /halaman/{slug} maupun langsung /{slug}.')
                             ->required()
                             ->maxLength(160)
+                            ->dehydrateStateUsing(fn (?string $state): string => Str::slug((string) $state))
                             ->unique(ignoreRecord: true),
                         RichEditor::make('body')
                             ->label('Isi Halaman')
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDirectory('pages/content')
+                            ->fileAttachmentsVisibility('public')
                             ->required()
                             ->columnSpanFull(),
                         TextInput::make('meta_title')
@@ -82,7 +89,10 @@ class PageResource extends Resource
                     ->searchable()
                     ->weight('semibold'),
                 TextColumn::make('slug')
-                    ->label('Slug'),
+                    ->label('URL Halaman')
+                    ->formatStateUsing(fn (string $state): string => '/halaman/'.$state)
+                    ->copyable()
+                    ->copyableState(fn (Page $record): string => route('pages.show', $record->slug)),
                 IconColumn::make('is_published')
                     ->label('Terbit')
                     ->boolean(),
@@ -91,6 +101,11 @@ class PageResource extends Resource
                     ->since(),
             ])
             ->recordActions([
+                Action::make('view_page')
+                    ->label('Lihat')
+                    ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                    ->url(fn (Page $record): string => route('pages.show', $record->slug), shouldOpenInNewTab: true)
+                    ->visible(fn (Page $record): bool => (bool) $record->is_published),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);
