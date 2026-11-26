@@ -234,7 +234,7 @@ class PublicPagesTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('max-w-[340px]', false)
+            ->assertSee('max-w-[360px]', false)
             ->assertDontSee('<span class="block text-xs text-[#4b615a]">', false);
     }
 

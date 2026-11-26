@@ -55,15 +55,19 @@
     @endif
 
     {{-- Main Sticky Navigation --}}
+    @php
+        $hasLogo = ! empty($siteSettings->logo);
+        $isLogoOnly = $hasLogo && ($siteSettings->logo_only ?? false);
+    @endphp
     <header
         x-data="{ mobileOpen: false }"
         class="sticky top-0 z-40 border-b border-[#176b55]/12 bg-[#fbfcfa]/92 backdrop-blur-md"
     >
-        <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-            @php
-                $hasLogo = ! empty($siteSettings->logo);
-                $isLogoOnly = $hasLogo && ($siteSettings->logo_only ?? false);
-            @endphp
+        <div @class([
+            'mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 sm:px-6',
+            'py-2 sm:py-2.5' => $isLogoOnly,
+            'py-3.5' => ! $isLogoOnly,
+        ])>
             <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-3">
                 @if($hasLogo)
                     <img
@@ -71,7 +75,7 @@
                         alt="Logo {{ $siteSettings->practice_name }}"
                         @class([
                             'w-auto shrink-0 object-contain',
-                            'h-12 max-w-[260px] rounded-lg sm:h-14 sm:max-w-[340px]' => $isLogoOnly,
+                            'h-16 max-w-[250px] rounded-lg sm:h-20 sm:max-w-[360px]' => $isLogoOnly,
                             'h-10 max-w-[220px] rounded-xl sm:h-11' => ! $isLogoOnly,
                         ])
                     >
@@ -172,7 +176,7 @@
                                 alt="Logo {{ $siteSettings->practice_name }}"
                                 @class([
                                     'w-auto shrink-0 rounded-xl bg-white/95 object-contain',
-                                    'h-12 max-w-[260px] px-2.5 py-1.5 sm:h-14 sm:max-w-[300px]' => $isLogoOnly,
+                                    'h-16 max-w-[260px] px-3 py-2 sm:h-20 sm:max-w-[340px]' => $isLogoOnly,
                                     'h-10 max-w-[200px] p-1 sm:h-11' => ! $isLogoOnly,
                                 ])
                             >
