@@ -60,22 +60,34 @@
         class="sticky top-0 z-40 border-b border-[#176b55]/12 bg-[#fbfcfa]/92 backdrop-blur-md"
     >
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
-            <a href="{{ route('home') }}" class="group flex items-center gap-3">
-                @if(! empty($siteSettings->logo))
+            @php
+                $hasLogo = ! empty($siteSettings->logo);
+                $isLogoOnly = $hasLogo && ($siteSettings->logo_only ?? false);
+            @endphp
+            <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-3">
+                @if($hasLogo)
                     <img
                         src="{{ $siteSettings->logo }}"
                         alt="Logo {{ $siteSettings->practice_name }}"
-                        class="h-10 w-auto max-w-[140px] shrink-0 rounded-xl object-contain"
+                        @class([
+                            'w-auto shrink-0 object-contain',
+                            'h-12 max-w-[260px] rounded-lg sm:h-14 sm:max-w-[340px]' => $isLogoOnly,
+                            'h-10 max-w-[220px] rounded-xl sm:h-11' => ! $isLogoOnly,
+                        ])
                     >
                 @endif
-                <div class="leading-tight">
-                    <span class="font-display block text-base font-semibold text-[#13221d] sm:text-lg">
-                        {{ $siteSettings->practice_name }}
-                    </span>
-                    <span class="block text-xs text-[#4b615a]">
-                        Binong, Curug · Kab. Tangerang
-                    </span>
-                </div>
+                @if($isLogoOnly)
+                    <span class="sr-only">{{ $siteSettings->practice_name }}</span>
+                @else
+                    <div class="leading-tight">
+                        <span class="font-display block text-base font-semibold text-[#13221d] sm:text-lg">
+                            {{ $siteSettings->practice_name }}
+                        </span>
+                        <span class="block text-xs text-[#4b615a]">
+                            Binong, Curug · Kab. Tangerang
+                        </span>
+                    </div>
+                @endif
             </a>
 
             <nav aria-label="Navigasi Utama" class="hidden items-center gap-1 lg:flex">
@@ -154,18 +166,29 @@
             <div class="grid gap-10 md:grid-cols-12">
                 <div class="md:col-span-5">
                     <div class="flex items-center gap-3">
-                        @if(! empty($siteSettings->logo))
+                        @if($hasLogo)
                             <img
                                 src="{{ $siteSettings->logo }}"
                                 alt="Logo {{ $siteSettings->practice_name }}"
-                                class="h-10 w-auto max-w-[140px] shrink-0 rounded-xl bg-white/95 p-1 object-contain"
+                                @class([
+                                    'w-auto shrink-0 rounded-xl bg-white/95 object-contain',
+                                    'h-12 max-w-[260px] px-2.5 py-1.5 sm:h-14 sm:max-w-[300px]' => $isLogoOnly,
+                                    'h-10 max-w-[200px] p-1 sm:h-11' => ! $isLogoOnly,
+                                ])
                             >
                         @endif
-                        <div>
-                            <p class="font-display text-lg font-semibold text-white">{{ $siteSettings->practice_name }}</p>
-                            <p class="text-xs text-emerald-100/80">{{ $siteSettings->doctor_name }} · {{ $siteSettings->doctor_role }}</p>
-                        </div>
+                        @if(! $isLogoOnly)
+                            <div>
+                                <p class="font-display text-lg font-semibold text-white">{{ $siteSettings->practice_name }}</p>
+                                <p class="text-xs text-emerald-100/80">{{ $siteSettings->doctor_name }} · {{ $siteSettings->doctor_role }}</p>
+                            </div>
+                        @endif
                     </div>
+                    @if($isLogoOnly)
+                        <p class="mt-3 text-xs font-medium text-emerald-100/85">
+                            {{ $siteSettings->doctor_name }} · {{ $siteSettings->doctor_role }}
+                        </p>
+                    @endif
 
                     <p class="mt-4 max-w-md text-sm leading-relaxed text-emerald-50/85">
                         {{ $siteSettings->tagline }}.

@@ -20,7 +20,7 @@ class PracticeDataService
     public const CACHE_TTL_SECONDS = 3600;
 
     private const CACHE_KEYS = [
-        'practice.settings.v1',
+        'practice.settings.v2',
         'practice.announcement.v1',
         'practice.opening_hours.v1',
         'practice.special_closures.v1',
@@ -44,7 +44,7 @@ class PracticeDataService
 
     public function settings(): object
     {
-        $data = Cache::remember('practice.settings.v1', self::CACHE_TTL_SECONDS, function (): array {
+        $data = Cache::remember('practice.settings.v2', self::CACHE_TTL_SECONDS, function (): array {
             $s = $this->practiceSettings;
 
             return [
@@ -57,6 +57,7 @@ class PracticeDataService
                 'hero_secondary_cta' => $s->hero_secondary_cta,
                 'hero_image' => $this->resolveImage($s->hero_image, '/images/clinic-hero.webp'),
                 'logo' => $s->logo ? $this->resolveImage($s->logo, '') : null,
+                'logo_only' => (bool) $s->logo_only,
                 'favicon' => $this->resolveImage($s->favicon, '/favicon.ico'),
                 'doctor_name' => $s->doctor_name,
                 'doctor_role' => $s->doctor_role,

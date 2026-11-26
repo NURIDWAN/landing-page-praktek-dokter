@@ -226,6 +226,46 @@ class PublicPagesTest extends TestCase
             ->assertOk()
             ->assertSee('src="/storage/settings/custom-logo.png"', false)
             ->assertSee('alt="Logo Praktek Dokter Siti Mudiroh"', false)
+            ->assertSee('Binong, Curug · Kab. Tangerang')
             ->assertSee('href="/storage/settings/custom-favicon.png"', false);
+
+        $settings->logo_only = true;
+        $settings->save();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('max-w-[340px]', false)
+            ->assertDontSee('<span class="block text-xs text-[#4b615a]">', false);
+    }
+
+    public function test_missing_new_settings_rows_do_not_crash_load_or_save(): void
+    {
+        \Illuminate\Support\Facades\DB::table('settings')
+            ->where('group', 'practice')
+            ->whereIn('name', ['favicon', 'logo_only'])
+            ->delete();
+
+        PracticeDataService::clearPublicCache();
+        app()->forgetInstance(PracticeSettings::class);
+
+        $this->get('/')->assertOk();
+
+        $settings = app(PracticeSettings::class);
+        $settings->logo_only = true;
+        $settings->favicon = 'settings/restored-favicon.png';
+        $settings->save();
+
+        $this->assertTrue(
+            \Illuminate\Support\Facades\DB::table('settings')
+                ->where('group', 'practice')
+                ->where('name', 'favicon')
+                ->exists()
+        );
+        $this->assertTrue(
+            \Illuminate\Support\Facades\DB::table('settings')
+                ->where('group', 'practice')
+                ->where('name', 'logo_only')
+                ->exists()
+        );
     }
 }

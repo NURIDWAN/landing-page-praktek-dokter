@@ -7,6 +7,7 @@ use BackedEnum;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Pages\SettingsPage;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -68,6 +69,10 @@ class ManagePracticeSettings extends SettingsPage
                                             ->acceptedFileTypes(['image/x-icon', 'image/vnd.microsoft.icon', 'image/png', 'image/svg+xml', 'image/webp', 'image/jpeg'])
                                             ->maxSize(1024)
                                             ->helperText('Ikon tab browser (32x32 / 64x64 px, format ICO, PNG, SVG, atau WEBP).'),
+                                        Toggle::make('logo_only')
+                                            ->label('Tampilkan Logo Saja (Logo Only)')
+                                            ->helperText('Aktifkan jika gambar logo sudah memuat teks nama praktek. Teks nama praktek di sebelah logo akan disembunyikan dan lebar logo menyesuaikan otomatis.')
+                                            ->columnSpanFull(),
                                         FileUpload::make('hero_image')
                                             ->label('Foto Hero Praktek (Opsional)')
                                             ->disk('public')

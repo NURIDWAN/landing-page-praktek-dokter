@@ -20,11 +20,13 @@ class PracticeSettings extends Settings
 
     public string $hero_secondary_cta;
 
-    public ?string $hero_image;
+    public ?string $hero_image = null;
 
-    public ?string $logo;
+    public ?string $logo = null;
 
-    public ?string $favicon;
+    public bool $logo_only = false;
+
+    public ?string $favicon = null;
 
     public string $doctor_name;
 
@@ -34,9 +36,9 @@ class PracticeSettings extends Settings
 
     public string $doctor_notes;
 
-    public ?string $doctor_photo;
+    public ?string $doctor_photo = null;
 
-    public ?string $sip_number;
+    public ?string $sip_number = null;
 
     public string $phone;
 
@@ -60,7 +62,7 @@ class PracticeSettings extends Settings
 
     public string $longitude;
 
-    public ?string $google_rating_text;
+    public ?string $google_rating_text = null;
 
     public string $medical_disclaimer;
 
@@ -68,12 +70,30 @@ class PracticeSettings extends Settings
 
     public string $default_meta_description;
 
-    public ?string $instagram_url;
+    public ?string $instagram_url = null;
 
-    public ?string $facebook_url;
+    public ?string $facebook_url = null;
 
     public static function group(): string
     {
         return 'practice';
+    }
+
+    public function save(): self
+    {
+        $config = $this->settingsConfig();
+        $this->toCollection();
+
+        $repository = $this->getRepository();
+
+        foreach ($config->getDefaultValueLoadedProperties() as $propertyName) {
+            if (! $repository->checkIfPropertyExists(static::group(), $propertyName)) {
+                $repository->createProperty(static::group(), $propertyName, $this->{$propertyName});
+            }
+        }
+
+        $config->resetDefaultValueLoadedProperties();
+
+        return parent::save();
     }
 }

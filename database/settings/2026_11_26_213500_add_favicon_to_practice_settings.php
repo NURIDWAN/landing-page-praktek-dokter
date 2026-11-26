@@ -6,6 +6,8 @@ return new class extends SettingsMigration
 {
     public function up(): void
     {
-        $this->migrator->add('practice.favicon', null);
+        if (! $this->migrator->exists('practice.favicon')) {
+            $this->migrator->add('practice.favicon', null);
+        }
     }
 };
