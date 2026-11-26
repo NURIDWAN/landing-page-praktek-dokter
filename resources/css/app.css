@@ -1,0 +1,177 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/plus-jakarta-sans';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../../app/View/**/*.php';
+
+@theme {
+    --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+    --color-emerald-brand: #176b55;
+    --color-emerald-deep: #0f4c3c;
+    --color-emerald-soft: #eef6f3;
+    --color-emerald-tint: #d8ece4;
+    --color-canvas-warm: #fbfcfa;
+    --color-ink-primary: #13221d;
+    --color-ink-muted: #4b615a;
+    --color-amber-warm: #c97a3d;
+}
+
+:root {
+    --brand-primary: #176b55;
+    --brand-deep: #0f4c3c;
+    --brand-soft: #eef6f3;
+    --brand-tint: #d8ece4;
+    --surface-canvas: #fbfcfa;
+    --surface-card: #ffffff;
+    --ink-primary: #13221d;
+    --ink-muted: #4b615a;
+    --accent-warm: #c97a3d;
+    --border-subtle: rgba(23, 107, 85, 0.14);
+}
+
+html {
+    scroll-behavior: smooth;
+    color: var(--ink-primary);
+    background-color: var(--surface-canvas);
+    font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+/* Subtle architectural contour grid background */
+.clinical-contour-bg {
+    background-image:
+        radial-gradient(circle at 18% 20%, rgba(23, 107, 85, 0.08), transparent 46%),
+        radial-gradient(circle at 86% 12%, rgba(201, 122, 61, 0.07), transparent 36%),
+        linear-gradient(to right, rgba(23, 107, 85, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(23, 107, 85, 0.035) 1px, transparent 1px);
+    background-size: auto, auto, 44px 44px, 44px 44px;
+}
+
+/* Pointer glow & subtle tilt strictly gated to fine pointer + no reduced motion */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .pointer-glow {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pointer-glow::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 280ms ease;
+        background: radial-gradient(
+            320px circle at var(--mx, 50%) var(--my, 50%),
+            rgba(23, 107, 85, 0.09),
+            transparent 70%
+        );
+    }
+
+    .pointer-glow:hover::before {
+        opacity: 1;
+    }
+
+    .tilt-card {
+        transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease, border-color 260ms ease;
+        transform-style: preserve-3d;
+        will-change: transform;
+    }
+
+    .tilt-card:hover {
+        transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-3px);
+    }
+
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal-section.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Prose styling for articles & static pages */
+.article-prose {
+    color: var(--ink-primary);
+    line-height: 1.8;
+    font-size: 1.035rem;
+}
+
+.article-prose h2 {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 600;
+    color: var(--brand-deep);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.article-prose h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.article-prose p {
+    margin-bottom: 1.15rem;
+}
+
+.article-prose ul,
+.article-prose ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.35rem;
+}
+
+.article-prose ul {
+    list-style-type: disc;
+}
+
+.article-prose ol {
+    list-style-type: decimal;
+}
+
+.article-prose li {
+    margin-bottom: 0.45rem;
+}
+
+.article-prose blockquote {
+    border-left: 3px solid var(--brand-primary);
+    background-color: var(--brand-soft);
+    padding: 0.9rem 1.15rem;
+    border-radius: 0 0.75rem 0.75rem 0;
+    margin: 1.35rem 0;
+    color: var(--brand-deep);
+}
+
+.article-prose a {
+    color: var(--brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Focus ring accessibility */
+:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
